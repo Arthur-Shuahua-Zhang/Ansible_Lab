@@ -1,0 +1,20 @@
+---
+- hosts: webservers
+  tasks:
+  
+  - name: check file status
+    stat: 
+      path: /tmp/index.html
+    register: checkindex
+
+  - debug:
+      var: checkindex
+
+  - name: create the indexfile
+    command: touch /tmp/index.html
+    when: checkindex.stat.exists == false
+
+
+  - name: add content to the indexfile
+    shell: 'echo "Hello World" > /tmp/index.html'
+    when: checkindex.stat.exists == true
